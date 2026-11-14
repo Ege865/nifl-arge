@@ -1,0 +1,197 @@
+-- NIFL ARGE · sitenin bütün metinleri, görselleri ve projeleri Supabase'den
+-- SQL Editor → New query → yapıştırın → Run. Tekrar çalıştırmak güvenli: var olan satırlara dokunmaz.
+-- Sonra Table Editor'dan "icerik" ve "projeler" tablolarını düzenleyin; site sayfa yenilenince değişir.
+
+-- ───────── sayfa metinleri ve görselleri ─────────
+-- anahtar: sayfa.bolum.ogeN (değiştirmeyin) · deger: yeni metin ya da görsel adresi
+-- tur = 'html' olan satırlarda <span class="dim">gri kısım</span>, <strong>kalın</strong>, <br> kullanılabilir.
+-- tur = 'gorsel': Storage → gorseller klasörüne yükleyin, "Get URL" ile aldığınız adresi deger'e yapıştırın.
+create table if not exists public.icerik (
+  anahtar text primary key,
+  deger text not null default '',
+  tur text not null default 'metin' check (tur in ('metin', 'html', 'gorsel')),
+  sayfa text not null default 'index',
+  sira int not null default 0,
+  updated_at timestamptz not null default now()
+);
+alter table public.icerik enable row level security;
+drop policy if exists "herkes okur" on public.icerik;
+create policy "herkes okur" on public.icerik for select to anon, authenticated using (true);
+drop policy if exists "yonetici yazar" on public.icerik;
+create policy "yonetici yazar" on public.icerik for all to authenticated using ((select public.yonetici_mi())) with check ((select public.yonetici_mi()));
+revoke all on public.icerik from anon;
+grant select on public.icerik to anon;
+grant select, insert, update, delete on public.icerik to authenticated;
+
+-- ───────── projeler ─────────
+-- bilgiler: [["Kuruluş","2024"], ...] · hakkinda: ["paragraf", ...] · ekip: [["Ad Soyad","Görev"], ...]
+-- galeri: [{"src":"görsel adresi","alt":"açıklama"}, ...] · sira: sekmelerdeki sıra · yayinda=false gizler
+create table if not exists public.projeler (
+  slug text primary key check (slug ~ '^[a-z0-9-]+$'),
+  sira int not null default 100,
+  ad text not null,
+  baslik text,
+  alan text not null default '',
+  kisa text,
+  durum text,
+  gorsel text not null,
+  gorsel_alt text,
+  ozet text,
+  logo text,
+  bilgiler jsonb not null default '[]',
+  hakkinda jsonb not null default '[]',
+  ekip jsonb not null default '[]',
+  galeri jsonb not null default '[]',
+  yayinda boolean not null default true
+);
+alter table public.projeler enable row level security;
+drop policy if exists "herkes yayindakileri okur" on public.projeler;
+create policy "herkes yayindakileri okur" on public.projeler for select to anon, authenticated using (yayinda or (select public.yonetici_mi()));
+drop policy if exists "yonetici yazar" on public.projeler;
+create policy "yonetici yazar" on public.projeler for all to authenticated using ((select public.yonetici_mi())) with check ((select public.yonetici_mi()));
+revoke all on public.projeler from anon;
+grant select on public.projeler to anon;
+grant select, insert, update, delete on public.projeler to authenticated;
+
+insert into public.icerik (anahtar, deger, tur, sayfa, sira) values
+  ('ortak.eposta', 'iletisim@niflarge.example', 'metin', 'ortak', 0),
+  ('index.hero.h11', 'NİFL AR-GE', 'metin', 'index', 1),
+  ('index.hero.p1', 'Nilüfer Borsa İstanbul Fen Lisesi’nin Ar-Ge birimi. Roket, su altı aracı ve İHA geliştiriyoruz. Aurora Roket Takımımız <strong>TEKNOFEST 2026’da 1.629 takım arasında Türkiye birincisi</strong> oldu.', 'html', 'index', 2),
+  ('index.hero.a1', 'Sponsor olun / Bağış yapın', 'metin', 'index', 3),
+  ('index.hero.a2', 'Projeleri inceleyin', 'metin', 'index', 4),
+  ('index.hero.p2', 'Bursa, Nilüfer · 2024’ten beri TEKNOFEST’te', 'metin', 'index', 5),
+  ('index.hero.p3', '<b>1.038</b> puan, 1.000 puanlık tavanın üstünde', 'html', 'index', 6),
+  ('index.arge.p1', 'Birçok lisede bir fikir proje ödevi olarak başlar ve not alınınca biter. Bizde aynı fikir bir rapora, bir prototipe, sonra bir yarışma sahasına gider.', 'metin', 'index', 7),
+  ('index.arge.p2', 'NIFL ARGE’yi okul müdürümüz Mustafa Ersoy kurdu. Bugün roket, su altı, hava, ekoloji ve TÜBİTAK projelerinde çalışan öğrencileri aynı çatı altında topluyor. <span class="accent">Amacımız Ar-Ge kültürünü önce okulumuzda, sonra Bursa’da ve Türkiye’de yaymak.</span>', 'html', 'index', 8),
+  ('index.ucus.gorsel1', 'assets/img/roket-roketsan.jpg', 'gorsel', 'index', 9),
+  ('index.ucus.gorsel1.alt', 'TEKNOFEST Roket Yarışması atış alanı: Roketsan bayraklı çadırlar, büyük #ROKETSAN harfleri ve önlerinde NIFL ARGE roket takımı', 'metin', 'index', 10),
+  ('index.ucus.h21', 'Semrük’ün uçuşu', 'metin', 'index', 11),
+  ('index.ucus.p1', '7–13 Eylül 2026, Aksaray Hisar Atış Alanı. Roketimiz kalktı, tepe noktasında ayrıldı, paraşütlerini açtı ve indi. Gövdeyi ve faydalı yükü GPS ile 18 dakikada bulduk.', 'metin', 'index', 12),
+  ('index.sezonlar.h21', 'Üç sezonda sekizincilikten birinciliğe. <span class="dim">Aurora Roket Takımı’nın yolu.</span>', 'html', 'index', 14),
+  ('index.sezonlar.p1', 'Takım 2024’te 16 öğrenciyle kuruldu; danışmanı bilgisayar öğretmenimiz Aşir Çalışkan. Her sezon ön tasarım, kritik tasarım ve atışa hazırlık raporlarıyla başlar, atış alanında biter.', 'metin', 'index', 15),
+  ('index.sezonlar.span1', '2024', 'metin', 'index', 16),
+  ('index.sezonlar.h31', 'İlk sezon', 'metin', 'index', 17),
+  ('index.sezonlar.p2', 'İlk roketimiz kısmi başarıyla tamamlandı.', 'metin', 'index', 18),
+  ('index.sezonlar.p3', '8.<small>Türkiye</small>', 'html', 'index', 19),
+  ('index.sezonlar.span2', '2025', 'metin', 'index', 20),
+  ('index.sezonlar.h32', 'Roket düştü', 'metin', 'index', 21),
+  ('index.sezonlar.p4', 'Düşüşten öğrendiklerimizle tasarımı baştan kurduk; montaj süresini yarıya indirdik.', 'metin', 'index', 22),
+  ('index.sezonlar.p5', '8 → 4<small>saat montaj</small>', 'html', 'index', 23),
+  ('index.sezonlar.span3', '2026', 'metin', 'index', 24),
+  ('index.sezonlar.h33', 'Türkiye birincisi', 'metin', 'index', 25),
+  ('index.sezonlar.p6', '25 finalistten biri olduk; Semrük 3.350 metreye çıktı ve 1.038 puan aldı.', 'metin', 'index', 26),
+  ('index.sezonlar.p7', '1.<small>1.629 takım arasında</small>', 'html', 'index', 27),
+  ('index.sezonlar.span4', '2027', 'metin', 'index', 28),
+  ('index.sezonlar.h34', 'İki kategori', 'metin', 'index', 29),
+  ('index.sezonlar.p8', 'Yeni sezonda A1 ve A2 kategorilerinde iki ayrı takımla yarışıyoruz.', 'metin', 'index', 30),
+  ('index.sezonlar.p9', '2<small>takım</small>', 'html', 'index', 31),
+  ('index.okul.h21', 'Nilüfer Borsa İstanbul Fen Lisesi. <span class="dim">2011’den beri Bursa’da.</span>', 'html', 'index', 32),
+  ('index.okul.p1', 'Bursa’nın devlet fen liselerinden biri. Binasını Borsa İstanbul yaptırdı; adı da buradan geliyor. Öğrenciler LGS ile yerleşiyor.', 'metin', 'index', 33),
+  ('index.okul.span1', 'Açılış', 'metin', 'index', 34),
+  ('index.okul.span2', '2011–2012 eğitim yılı', 'metin', 'index', 35),
+  ('index.okul.span3', 'Yer', 'metin', 'index', 36),
+  ('index.okul.span4', 'Odunluk, Nilüfer / Bursa', 'metin', 'index', 37),
+  ('index.okul.span5', 'Kontenjan', 'metin', 'index', 38),
+  ('index.okul.span6', 'Yılda 120 öğrenci', 'metin', 'index', 39),
+  ('index.okul.span7', 'Atölye', 'metin', 'index', 40),
+  ('index.okul.span8', 'Teknonif robotik ve maker atölyesi', 'metin', 'index', 41),
+  ('index.okul.gorsel1', 'assets/img/okul-bina.jpg', 'gorsel', 'index', 42),
+  ('index.okul.gorsel1.alt', 'Nilüfer Borsa İstanbul Fen Lisesi’nin kırmızı tuğla girişli binası ve bayrak direkleri', 'metin', 'index', 43),
+  ('index.haberler.h21', 'Basında biz. <span class="dim">Haberlerde NIFL ARGE ve takımlarımızdan son gelişmeler.</span>', 'html', 'index', 44),
+  ('index.haberler.a1', 'Tümünü görün', 'metin', 'index', 45),
+  ('index.sponsor.h21', 'Desteğiniz doğrudan atölyeye gider. <span class="dim">Sponsor olun ya da bağış yapın; bir projeye ya da birimin tamamına.</span>', 'html', 'index', 46),
+  ('index.sponsor.p1', 'Roket motorundan aviyonik kartlara, atış alanına ulaşımdan atölye malzemesine kadar her destek bir projeyi bir adım öne taşır.', 'metin', 'index', 47),
+  ('index.sponsor.h31', 'Logonuz sahada', 'metin', 'index', 48),
+  ('index.sponsor.p2', 'Roketin, aracın ya da takım formalarının üzerinde.', 'metin', 'index', 49),
+  ('index.sponsor.h32', 'Adınız burada', 'metin', 'index', 50),
+  ('index.sponsor.p3', 'Bu sitede ve sosyal medya hesaplarımızda.', 'metin', 'index', 51),
+  ('index.sponsor.h33', 'Raporlarda teşekkür', 'metin', 'index', 52),
+  ('index.sponsor.p4', 'Yarışma raporlarında ve sunumlarda.', 'metin', 'index', 53),
+  ('index.sponsor.h34', 'Takımla tanışın', 'metin', 'index', 54),
+  ('index.sponsor.p5', 'Atölye ziyareti ya da atış günü buluşması.', 'metin', 'index', 55),
+  ('index.form.h21', 'Sorularınız varsa <span class="dim">burada.</span>', 'html', 'index', 56),
+  ('index.form.button1', 'Sponsor olmak için ne yapmam gerekiyor?', 'metin', 'index', 57),
+  ('index.q1.p1', 'Formu doldurmanız yeterli. Bir öğretmenimiz ve ilgili takımın kaptanı sizinle iletişime geçer, ihtiyaç listesini birlikte konuşuruz.', 'metin', 'index', 58),
+  ('index.form.button2', 'Belirli bir projeyi destekleyebilir miyim?', 'metin', 'index', 59),
+  ('index.q2.p1', 'Evet. Formda desteklemek istediğiniz projeyi seçin ya da “NIFL ARGE’nin tamamı” deyin; destek seçtiğiniz yere gider.', 'metin', 'index', 60),
+  ('index.form.button3', 'Para yerine malzeme ya da hizmet verebilir miyim?', 'metin', 'index', 61),
+  ('index.q3.p1', 'Elektronik kart, baskı, kompozit malzeme, ulaşım gibi ayni destekleri de konuşabiliriz. Mesajınızda ne sunabileceğinizi yazın.', 'metin', 'index', 62),
+  ('index.form.button4', 'Atölyeyi görebilir miyim?', 'metin', 'index', 63),
+  ('index.q4.p1', 'Formdan bir gün önerin; okul yönetimiyle planlayıp sizi Teknonif atölyesinde ağırlayalım.', 'metin', 'index', 64),
+  ('index.form.button5', 'Sponsor olmadan bağış yapabilir miyim?', 'metin', 'index', 65),
+  ('index.q5.p1', 'Evet. Formda destek türü olarak “Bağış”ı seçin; bağışın nasıl yapılacağını size e-postayla iletelim. Her tutar bir projeyi bir adım öne taşır.', 'metin', 'index', 66),
+  ('index.iletisim.h21', 'İletişim. <span class="dim">Bize yazın ya da atölyemize gelin.</span>', 'html', 'index', 68),
+  ('index.iletisim.span1', 'E-posta', 'metin', 'index', 69),
+  ('index.iletisim.span3', 'Adres', 'metin', 'index', 71),
+  ('index.iletisim.span4', 'Nilüfer Borsa İstanbul Fen Lisesi<br/>Erdoğan Binyücel Caddesi, Odunluk, Nilüfer / Bursa', 'html', 'index', 72),
+  ('index.iletisim.span5', 'Konum', 'metin', 'index', 73),
+  ('index.iletisim.span6', '<a class="link" data-map="" href="https://www.openstreetmap.org/search?query=Erdo%C4%9Fan%20Biny%C3%BCcel%20Caddesi%20Odunluk%20Nil%C3%BCfer%20Bursa" rel="noopener" target="_blank">Haritada açın</a>', 'html', 'index', 74),
+  ('index.close.h21', 'Rotayı biz çizeriz. <span class="dim">Bir sonraki fırlatmayı birlikte yapalım.</span>', 'html', 'index', 75),
+  ('index.close.a1', 'Sponsor olun / Bağış yapın', 'metin', 'index', 76),
+  ('ortak.foot.address1', 'Nilüfer Borsa İstanbul Fen Lisesi<br/>Erdoğan Binyücel Caddesi, Odunluk, Nilüfer / Bursa', 'html', 'ortak', 77),
+  ('ortak.foot.h31', 'Projeler', 'metin', 'ortak', 78),
+  ('ortak.foot.h32', 'Daha fazla', 'metin', 'ortak', 79),
+  ('ortak.foot.h33', 'İletişim', 'metin', 'ortak', 80),
+  ('haberler.pagehead.h11', 'Basında biz', 'metin', 'haberler', 1),
+  ('haberler.pagehead.p1', 'Gazetelerde ve haber sitelerinde NIFL ARGE, takımlarımızdan duyurular ve yarışma sonuçları.', 'metin', 'haberler', 2),
+  ('proje.sec.h21', 'Hakkında', 'metin', 'proje', 1),
+  ('proje.sec.h22', 'Ekip', 'metin', 'proje', 2),
+  ('proje.sec.h23', 'Gelişmeler. <span class="dim">En yenisi üstte.</span>', 'html', 'proje', 3),
+  ('proje.sec.h24', 'Fotoğraflar', 'metin', 'proje', 4),
+  ('proje.close.a1', 'Sponsor olun', 'metin', 'proje', 6),
+  ('kvkk.pagehead.h11', 'Kişisel verilerin korunması', 'metin', 'kvkk', 1),
+  ('kvkk.pagehead.p1', 'Sponsorluk ve bağış formu ile e-posta yazışmaları için 6698 sayılı Kişisel Verilerin Korunması Kanunu’nun 10. maddesi kapsamında aydınlatma metni.', 'metin', 'kvkk', 2),
+  ('kvkk.sec.h21', 'Veri sorumlusu', 'metin', 'kvkk', 3),
+  ('kvkk.sec.p1', 'Kişisel verileriniz, veri sorumlusu sıfatıyla T.C. Millî Eğitim Bakanlığı’na bağlı Nilüfer Borsa İstanbul Fen Lisesi Müdürlüğü tarafından işlenir. NIFL ARGE, okulun Ar-Ge birimidir ve ayrı bir tüzel kişiliği yoktur.', 'metin', 'kvkk', 4),
+  ('kvkk.sec.span1', 'Adres', 'metin', 'kvkk', 5),
+  ('kvkk.sec.span2', 'Erdoğan Binyücel Caddesi, Odunluk Mahallesi, Nilüfer / Bursa', 'metin', 'kvkk', 6),
+  ('kvkk.sec.span3', 'E-posta', 'metin', 'kvkk', 7),
+  ('kvkk.sec.h22', 'Hangi verileri, neden işliyoruz', 'metin', 'kvkk', 9),
+  ('kvkk.sec.span5', 'Kimlik', 'metin', 'kvkk', 10),
+  ('kvkk.sec.span6', 'Adınız ve soyadınız', 'metin', 'kvkk', 11),
+  ('kvkk.sec.span7', 'İletişim', 'metin', 'kvkk', 12),
+  ('kvkk.sec.span8', 'E-posta adresiniz', 'metin', 'kvkk', 13),
+  ('kvkk.sec.span9', 'Kurum', 'metin', 'kvkk', 14),
+  ('kvkk.sec.span10', 'Çalıştığınız ya da temsil ettiğiniz kurumun adı', 'metin', 'kvkk', 15),
+  ('kvkk.sec.span11', 'Talep', 'metin', 'kvkk', 16),
+  ('kvkk.sec.span12', 'Mesajınız ve desteklemek istediğiniz proje', 'metin', 'kvkk', 17),
+  ('kvkk.sec.p2', 'Bu verileri yalnızca sponsorluk talebinizi değerlendirmek, size dönüş yapmak ve sponsorluk ilişkisi kurulursa bunu yürütmek için işleriz. Verileriniz pazarlama, bülten ya da başka bir amaçla kullanılmaz.', 'metin', 'kvkk', 18),
+  ('kvkk.sec.h23', 'Hukuki sebep ve toplama yöntemi', 'metin', 'kvkk', 19),
+  ('kvkk.sec.p3', 'Verileriniz, KVKK’nın 5. maddesinin 2. fıkrasının (c) bendi uyarınca bir sözleşmenin kurulmasıyla doğrudan ilgili olması ve (f) bendi uyarınca talebinize yanıt verebilmemiz için meşru menfaatimiz bulunması hukuki sebeplerine dayanılarak işlenir. Bu amaçlar için ayrıca açık rızanız istenmez.', 'metin', 'kvkk', 20),
+  ('kvkk.sec.p4', 'Veriler, bu sitedeki sponsorluk formunu gönderdiğinizde ya da bize doğrudan e-posta yazdığınızda elektronik ortamda toplanır. Formdaki bilgiler, yalnızca yetkili okul personelinin şifreyle erişebildiği bir veritabanına kaydedilir.', 'metin', 'kvkk', 21),
+  ('kvkk.sec.h24', 'Kimlerle paylaşılır, ne kadar saklanır', 'metin', 'kvkk', 22),
+  ('kvkk.sec.p5', 'Verileriniz okul yönetimi ve ilgili projenin danışman öğretmeniyle, talebinizi yanıtlamak için gerektiği kadar paylaşılır. Yasal bir zorunluluk olduğunda yetkili kamu kurum ve kuruluşlarına aktarılabilir. Üçüncü kişilere satılmaz ya da reklam amacıyla verilmez.', 'metin', 'kvkk', 23),
+  ('kvkk.sec.p6', 'Form kayıtları, veritabanı hizmetini aldığımız Supabase Inc.’in Avrupa Birliği’ndeki (Frankfurt, Almanya) sunucularında saklanır. Bu aktarım, KVKK’nın 9. maddesi uyarınca Kişisel Verileri Koruma Kurulu’nun ilan ettiği standart sözleşmeye dayanılarak yapılır ve sözleşme Kişisel Verileri Koruma Kurumu’na bildirilmiştir. Supabase verilerinizi yalnızca bu hizmeti sağlamak için işler.', 'metin', 'kvkk', 24),
+  ('kvkk.sec.p7', 'Verileriniz, talebiniz sonuçlandıktan sonra en fazla 2 yıl saklanır; bu sürenin sonunda silinir ya da anonim hâle getirilir. Sponsorluk ilişkisi kurulursa ilgili mevzuatın öngördüğü süreler uygulanır.', 'metin', 'kvkk', 25),
+  ('kvkk.sec.h25', 'Haklarınız', 'metin', 'kvkk', 26),
+  ('kvkk.sec.p8', 'KVKK’nın 11. maddesi uyarınca veri sorumlusuna başvurarak şunları talep edebilirsiniz:', 'metin', 'kvkk', 27),
+  ('kvkk.sec.span13', 'Bilgi', 'metin', 'kvkk', 28),
+  ('kvkk.sec.span14', 'Verilerinizin işlenip işlenmediğini öğrenme, işlendiyse buna ilişkin bilgi isteme', 'metin', 'kvkk', 29),
+  ('kvkk.sec.span15', 'Amaç', 'metin', 'kvkk', 30),
+  ('kvkk.sec.span16', 'İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme', 'metin', 'kvkk', 31),
+  ('kvkk.sec.span17', 'Aktarım', 'metin', 'kvkk', 32),
+  ('kvkk.sec.span18', 'Yurt içinde ya da yurt dışında aktarıldığı üçüncü kişileri bilme', 'metin', 'kvkk', 33),
+  ('kvkk.sec.span19', 'Düzeltme', 'metin', 'kvkk', 34),
+  ('kvkk.sec.span20', 'Eksik ya da yanlış işlenmişse düzeltilmesini isteme', 'metin', 'kvkk', 35),
+  ('kvkk.sec.span21', 'Silme', 'metin', 'kvkk', 36),
+  ('kvkk.sec.span22', 'KVKK’nın 7. maddesindeki şartlar çerçevesinde silinmesini ya da yok edilmesini isteme', 'metin', 'kvkk', 37),
+  ('kvkk.sec.span23', 'Bildirim', 'metin', 'kvkk', 38),
+  ('kvkk.sec.span24', 'Düzeltme ve silme işlemlerinin, verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme', 'metin', 'kvkk', 39),
+  ('kvkk.sec.span25', 'İtiraz', 'metin', 'kvkk', 40),
+  ('kvkk.sec.span26', 'Yalnızca otomatik sistemlerle analiz edilmesi sonucu aleyhinize bir sonuca itiraz etme', 'metin', 'kvkk', 41),
+  ('kvkk.sec.span27', 'Tazmin', 'metin', 'kvkk', 42),
+  ('kvkk.sec.span28', 'Kanuna aykırı işleme nedeniyle zarara uğramanız hâlinde zararın giderilmesini talep etme', 'metin', 'kvkk', 43),
+  ('kvkk.sec.p9', 'Başvurunuzu yukarıdaki adrese yazılı olarak ya da e-posta ile iletebilirsiniz. Başvurular, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ’e uygun olarak en geç 30 gün içinde ücretsiz yanıtlanır.', 'metin', 'kvkk', 44),
+  ('kvkk.sec.h26', 'Çerezler', 'metin', 'kvkk', 45),
+  ('kvkk.sec.p10', 'Bu site çerez ya da ziyaretçi takip aracı kullanmaz. Yazı tipleri ve kütüphaneler sitenin kendi sunucusundan yüklenir. Haberler ve sponsor listesi sayfa açılırken veritabanından okunur; bu sırada tarayıcınızın IP adresi, teknik olarak zorunlu olduğu için veritabanı sunucusuna ulaşır ve hizmet sağlayıcının güvenlik kayıtlarında kısa süre tutulabilir.', 'metin', 'kvkk', 46),
+  ('kvkk.sec.p11', 'Son güncelleme: 14 Kasım 2026', 'metin', 'kvkk', 47)
+on conflict (anahtar) do nothing;
+
+insert into public.projeler (slug, sira, ad, baslik, alan, kisa, durum, gorsel, gorsel_alt, ozet, logo, bilgiler, hakkinda, ekip, galeri) values
+  ('roket', 10, 'Aurora Roket Takımı', 'Tavan puanın üstünde.', 'Roket', 'TEKNOFEST Roket Yarışması, A1 ve A2 kategorileri', 'TEKNOFEST 2026 Türkiye birincisi', 'assets/img/roket-takim-okul.jpg', 'Aurora Roket Takımı okulun önünde, ortada kırmızı roketleriyle', 'Semrük roketimiz 3.350 metreye çıktı ve 1.629 takım arasında Türkiye birincisi oldu.', null, '[["Kuruluş","2024"],["Ekip","16 öğrenci"],["Danışman","Aşir Çalışkan"],["Son sonuç","1.038 puan, Türkiye 1.si"]]'::jsonb, '["Aurora, TEKNOFEST Roket Yarışması için 2024’te kuruldu. Adını coğrafya öğretmenimiz Ali İhsan Ulu önerdi.","İlk yıl kısmi başarıyla Türkiye 8.si olduk. İkinci yıl roketimiz düştü. Üçüncü yıl ön tasarım, kritik tasarım ve atışa hazırlık raporlarını geçip 25 finalistten biri olduk.","Efsanevi iki başlı kuştan adını alan Semrük, 7–13 Eylül 2026’da Aksaray Hisar Atış Alanı’nda 3.350 metreye çıktı, ayrıldı, paraşütlerini açtı ve indi. GPS verisiyle gövdeyi ve faydalı yükü 18 dakikada bulduk. Sekiz saatlik montajı dört saatte bitirdik.","2027 sezonunda A1 ve A2 kategorilerinde iki ayrı takımla yarışıyoruz."]'::jsonb, '[["Samet Karabulut","Takım kaptanı"],["Nisa Göktekin","Takım kaptanı, aviyonik"],["Aşir Çalışkan","Danışman öğretmen"]]'::jsonb, '[{"src":"assets/img/roket-roketsan.jpg","alt":"Aurora Roket Takımı yarışma alanında, Roketsan yazısının önünde"},{"src":"assets/img/roket-takim-okul.jpg","alt":"Takım okulun önünde roketiyle"}]'::jsonb),
+  ('denizalti', 20, 'Denizaltı Takımı', 'Su altına iniyoruz.', 'Su altı', 'İnsansız su altı aracı', 'Tasarım aşamasında', 'assets/img/photo-f28083954-960.jpg', 'Sarı gövdeli, güneş panelli bir su altı aracı', 'Takımımız insansız su altı aracını tasarlıyor ve yarışmalara hazırlanıyor.', null, '[["Alan","İnsansız su altı aracı"],["Durum","Tasarım"],["Hedef","Ulusal yarışmalar"]]'::jsonb, '["Aktif olarak çalışan takımımız su altı aracını tasarlıyor ve yarışmalara hazırlanıyor."]'::jsonb, '[]'::jsonb, '[]'::jsonb),
+  ('iha', 30, 'GökTürk İHA Takımı', 'İstikbal göklerde.', 'Hava', 'TEKNOFEST İnsansız Hava Aracı Yarışması', '2026’da kuruldu', 'assets/img/photo-f93507658-960.jpg', 'Havada süzülen dört pervaneli bir insansız hava aracı', 'NIFL ARGE’nin en yeni takımı. Hedefimiz TEKNOFEST’te Türkiye birinciliği.', 'assets/img/gokturk-lockup.png', '[["Kuruluş","2026"],["Yarışma","TEKNOFEST İHA"],["Hedef","Türkiye birinciliği"]]'::jsonb, '["GökTürk, Nilüfer Borsa İstanbul Fen Lisesi öğrencilerinin 2026’da kurduğu insansız hava aracı takımı.","Vizyonumuz insansız hava aracı teknolojileri geliştirmek ve Ar-Ge kültürünü önce okulumuzda, sonra Bursa’da ve Türkiye’de yaymak. Misyonumuz TEKNOFEST İnsansız Hava Aracı Yarışması’nda Türkiye birincisi olmak.","İHA, TEKNOFEST’te rekabeti en yüksek kategorilerden biri. Zor bir alanı bilerek seçtik; güçlü rakipler bizi daha iyi mühendis yapacak."]'::jsonb, '[]'::jsonb, '[]'::jsonb),
+  ('eko-okul', 40, 'Ekolojik Okul Projesi', 'Okulu yeşile çeviriyoruz.', 'Ekoloji', 'Sera ve sürdürülebilir okul', 'Sürüyor', 'assets/img/ekolojik-sera.jpg', 'Kemer çatılı bir sera ve önündeki saksılarda çiçekler', 'Okulumuzu daha yeşil ve daha az tüketen bir yer yapmak için çalışıyoruz.', null, '[["Alan","Ekoloji, tarım"],["Durum","Sürüyor"]]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb),
+  ('tubitak', 50, 'TÜBİTAK Projeleri', 'Sorudan rapora.', 'Araştırma', 'Bilim fuarları ve araştırma projeleri', 'Her yıl', 'assets/img/photo-f4071999-960.jpg', 'Bir devre kartına cımbızla parça yerleştiren el', 'Öğrencilerimiz TÜBİTAK bilim fuarlarında ve araştırma projesi yarışmalarında yer alıyor.', null, '[["Alan","Fen, matematik, mühendislik"],["Durum","Her yıl"]]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb),
+  ('bireysel', 60, 'Bireysel Projeler', 'Kendi fikrin, kendi projen.', 'Bireysel', 'Öğrencilerin kendi fikirleri', 'Sürüyor', 'assets/img/photo-f163872371-960.jpg', 'Uzakta tarladan fırlayan bir model roket ve onu telefonla çeken biri', 'Bir takıma bağlı olmadan kendi fikrini geliştiren öğrencilerimizin projeleri.', null, '[["Alan","Serbest"],["Durum","Sürüyor"]]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb)
+on conflict (slug) do nothing;

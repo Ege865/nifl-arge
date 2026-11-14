@@ -1,6 +1,6 @@
 /* NIFL ARGE — shared: dither and halftone grounds, nav sheet, FAQ, form, helpers. */
-import { iletisim } from '../data/site.js?v=23';
-import { dbAcik, talepGonder } from './db.js?v=23';
+import { iletisim } from '../data/site.js?v=25';
+import { dbAcik, talepGonder } from './db.js?v=25';
 
 export const $ = (s, r = document) => r.querySelector(s);
 export const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -153,5 +153,41 @@ export function form() {
         ? `Kısa sürede çok fazla talep geldi. Bir saat sonra yeniden deneyin ya da bize doğrudan yazın: <a class="link" href="mailto:${esc(iletisim.eposta)}">${esc(iletisim.eposta)}</a>`
         : `Talep gönderilemedi. Bağlantınızı kontrol edip yeniden deneyin ya da bize doğrudan yazın: <a class="link" href="mailto:${esc(iletisim.eposta)}">${esc(iletisim.eposta)}</a>`;
     } finally { btn.disabled = false; }
+  });
+}
+
+/* ---------- Supabase'den gelen sayfa metinleri ve görselleri ---------- */
+// İzin verilen biçimler: <span class="dim|accent">, <strong>, <b>, <em>, <small>, <br>, <a class="link" href="...">
+const IZINLI = { SPAN: ['class'], STRONG: [], B: [], EM: [], SMALL: [], BR: [], TIME: [], A: ['href', 'class', 'target', 'rel'] };
+function temizle(html) {
+  const t = document.createElement('template');
+  t.innerHTML = html;
+  const gez = n => [...n.childNodes].forEach(c => {
+    if (c.nodeType === 3) return;
+    if (c.nodeType !== 1 || !IZINLI[c.tagName]) { c.replaceWith(document.createTextNode(c.textContent)); return; }
+    [...c.attributes].forEach(a => { if (!IZINLI[c.tagName].includes(a.name)) c.removeAttribute(a.name); });
+    if (c.tagName === 'A' && !/^(https?:|mailto:|tel:|[a-z0-9_-]+\.html|#)/i.test(c.getAttribute('href') || '')) c.removeAttribute('href');
+    gez(c);
+  });
+  gez(t.content);
+  return t.innerHTML;
+}
+export function icerikUygula(rows) {
+  if (!rows?.length) return;
+  const m = new Map(rows.map(r => [r.anahtar, r.deger ?? '']));
+  if (m.get('ortak.eposta')) iletisim.eposta = m.get('ortak.eposta').trim();
+  $$('[data-cms]').forEach(el => {
+    if (!m.has(el.dataset.cms)) return;
+    const v = m.get(el.dataset.cms);
+    if (el.hasAttribute('data-cms-html')) el.innerHTML = temizle(v);
+    else if (el.hasAttribute('data-cms-ilk')) {
+      const t = [...el.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
+      if (t) t.textContent = t.textContent.replace(t.textContent.trim(), v);
+    } else el.textContent = v;
+  });
+  $$('[data-cms-img]').forEach(img => {
+    const k = img.dataset.cmsImg;
+    if (m.get(k)) { img.src = m.get(k); img.removeAttribute('srcset'); }
+    if (m.has(k + '.alt')) img.alt = m.get(k + '.alt');
   });
 }

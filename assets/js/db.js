@@ -9,7 +9,7 @@ export const SUPABASE = {
   anahtar: 'sb_publishable_ZESNmssXSu5ZV2o8l1-Mwg_ZY6K87O9'
 };
 
-import * as yerel from '../data/site.js?v=23';
+import * as yerel from '../data/site.js?v=25';
 
 export const dbAcik = () => /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(SUPABASE.url) && SUPABASE.anahtar.length > 20;
 
@@ -19,9 +19,9 @@ const basliklar = () => ({
   ...(SUPABASE.anahtar.startsWith('eyJ') ? { Authorization: `Bearer ${SUPABASE.anahtar}` } : {})
 });
 
-async function istek(yol, ayar = {}) {
+async function istek(yol, ayar = {}, sure = 6000) {
   const ctl = new AbortController();
-  const t = setTimeout(() => ctl.abort(), 6000);
+  const t = setTimeout(() => ctl.abort(), sure);
   try {
     const r = await fetch(`${SUPABASE.url}/rest/v1/${yol}`, { ...ayar, headers: { ...basliklar(), ...ayar.headers }, signal: ctl.signal });
     if (!r.ok) {
@@ -87,4 +87,24 @@ export async function talepGonder(kayit) {
     if (e.detay?.message === 'cok_fazla_talep') e.kod = 'sinir';
     throw e;
   }
+}
+
+/* Projeler: Supabase'deki projeler tablosu; ulaşılamazsa site.js. Sayfa bunu beklediği için süre kısa tutuldu. */
+export async function projeleriAl() {
+  if (!dbAcik()) return yerel.projeler;
+  try {
+    const rows = await istek('projeler?select=*&order=sira.asc', {}, 2500);
+    if (!rows?.length) return yerel.projeler;
+    return rows.map(r => ({ ...r, gorselAlt: r.gorsel_alt, bilgiler: r.bilgiler || [], hakkinda: r.hakkinda || [], ekip: r.ekip || [], galeri: r.galeri || [] }));
+  } catch (e) {
+    console.warn('Projeler Supabase’den alınamadı, yerel içerik gösteriliyor.', e);
+    return yerel.projeler;
+  }
+}
+
+/* Sayfa metinleri ve görselleri: icerik tablosundaki anahtar → değer satırları. Yoksa sayfadaki metin kalır. */
+export async function icerikAl() {
+  if (!dbAcik()) return [];
+  try { return await istek('icerik?select=anahtar,deger', {}, 2500); }
+  catch (e) { console.warn('Sayfa metinleri Supabase’den alınamadı, sayfadaki metin gösteriliyor.', e); return []; }
 }

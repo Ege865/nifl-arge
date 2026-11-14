@@ -76,3 +76,18 @@ Publishable anahtar herkese açık olacak şekilde tasarlanmıştır; tabloları
 - **Ücretsiz plan:** Proje bir hafta hiç kullanılmazsa durdurulur. Site bu durumda `site.js` içeriğine döner. Panelden **Restore** ile yeniden açılır.
 - **Yedek:** Ücretsiz planda otomatik yedek yoktur. Önemli talepleri ara ara **Table Editor → sponsor_talepleri → Export** ile indirin.
 - **Projeler:** Projelerin kendisi (ad, metin, ekip, fotoğraflar) hâlâ `assets/data/site.js` dosyasında. Veritabanından gelenler haberler, gelişmeler ve sponsorlar.
+
+## Sitenin bütün içeriğini Supabase'den değiştirmek
+
+1. `supabase/icerik-kurulum.sql` dosyasını SQL Editor'da bir kez çalıştırın. Bu, sitedeki metinleri ve projeleri iki tabloya kopyalar.
+2. **Table Editor → icerik:** Sayfadaki her başlık, paragraf, buton yazısı ve görsel burada bir satırdır.
+   - `anahtar` hangi öğe olduğunu söyler (`index.hero.h11` = ana sayfanın büyük başlığı). Bu sütunu değiştirmeyin.
+   - Değiştirmek istediğiniz satırın `deger` sütununu düzenleyin.
+   - `tur = gorsel` satırları için: önce **Storage → gorseller** klasörüne görseli yükleyin, sonra **Get URL** ile aldığınız adresi `deger`e yapıştırın.
+   - `tur = html` satırlarında `<span class="dim">gri kısım</span>`, `<strong>kalın</strong>` ve `<br>` kullanabilirsiniz.
+   - `ortak.eposta` satırı sitedeki bütün e-posta bağlantılarını değiştirir.
+3. **Table Editor → projeler:** Proje adı, sloganı, durumu, fotoğrafı, özeti, bilgileri, ekibi ve galerisi.
+   - Yeni bir proje için satır ekleyin.
+   - `yayinda` sütununu `false` yaparsanız proje gizlenir.
+   - `sira` sütunu sekmelerdeki sırayı belirler.
+4. Değişiklik, sayfa yenilendiğinde sitede görünür.
