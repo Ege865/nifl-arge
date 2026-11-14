@@ -1,4 +1,4 @@
--- NIFL ARGE · Supabase kurulumu
+-- NİFL AR-GE · Supabase kurulumu
 -- Supabase panelinde SQL Editor → New query → bu dosyanın tamamını yapıştırın → Run.
 -- Birden fazla çalıştırmak güvenlidir: var olanı bozmaz, örnek kayıtları yalnızca tablo boşsa ekler.
 
@@ -85,7 +85,7 @@ create table if not exists public.sponsor_talepleri (
   ad text not null check (char_length(ad) between 2 and 120),
   kurum text not null check (char_length(kurum) between 2 and 160),
   eposta text not null check (char_length(eposta) <= 200 and eposta ~ '^[^@\s]+@[^@\s]+\.[^@\s]+$'),
-  proje text not null default 'NIFL ARGE’nin tamamı' check (char_length(proje) <= 120),
+  proje text not null default 'NİFL AR-GE’nin tamamı' check (char_length(proje) <= 120),
   mesaj text not null check (char_length(mesaj) between 2 and 4000),
   aydinlatma boolean not null check (aydinlatma),
   durum text not null default 'yeni' check (durum in ('yeni', 'gorusuluyor', 'kapandi'))
@@ -110,18 +110,31 @@ revoke all on public.sponsor_talepleri from anon;
 grant insert (ad, kurum, eposta, proje, mesaj, aydinlatma) on public.sponsor_talepleri to anon;
 grant select, insert, update, delete on public.sponsor_talepleri to authenticated;
 
--- Spam freni: aynı adresten saatte 3, toplamda 10 dakikada 30 talepten fazlası reddedilir.
+-- Spam freni: aynı IP'den saatte 5 / günde 20, aynı e-postadan saatte 3 talep. IP'nin yalnızca özeti tutulur.
+alter table public.sponsor_talepleri add column if not exists ip_ozet text;
+create index if not exists talepler_ip on public.sponsor_talepleri (ip_ozet, created_at desc);
+
 create or replace function public.talep_siniri()
 returns trigger
 language plpgsql
 security definer
 set search_path = ''
 as $$
+declare
+  basliklar json := coalesce(nullif(current_setting('request.headers', true), ''), '{}')::json;
+  ip text := coalesce(basliklar ->> 'cf-connecting-ip', split_part(basliklar ->> 'x-forwarded-for', ',', 1), '');
 begin
+  new.ip_ozet := case when ip = '' then null
+                      else encode(pg_catalog.sha256(convert_to('nifl-arge:' || trim(ip), 'UTF8')), 'hex') end;
+  if new.ip_ozet is not null and (
+       (select count(*) from public.sponsor_talepleri
+          where ip_ozet = new.ip_ozet and created_at > now() - interval '1 hour') >= 5
+    or (select count(*) from public.sponsor_talepleri
+          where ip_ozet = new.ip_ozet and created_at > now() - interval '1 day') >= 20) then
+    raise exception 'cok_fazla_talep' using errcode = 'P0001';
+  end if;
   if (select count(*) from public.sponsor_talepleri
-        where lower(eposta) = lower(new.eposta) and created_at > now() - interval '1 hour') >= 3
-     or (select count(*) from public.sponsor_talepleri
-        where created_at > now() - interval '10 minutes') >= 30 then
+        where lower(eposta) = lower(new.eposta) and created_at > now() - interval '1 hour') >= 3 then
     raise exception 'cok_fazla_talep' using errcode = 'P0001';
   end if;
   new.created_at := now();
@@ -162,7 +175,7 @@ select * from (values
   ('2026-09', 'roket', 'haber', 'Semrük Aksaray’da 3.350 metreye çıktı',
    'Atış 7–13 Eylül arasında Hisar Atış Alanı’nda yapıldı. Gövdeyi ve faydalı yükü GPS ile 18 dakikada bulduk.', null, null, null),
   ('2026', 'iha', 'haber', 'GökTürk İHA Takımı kuruldu',
-   'NIFL ARGE’nin en yeni takımı TEKNOFEST İnsansız Hava Aracı Yarışması’na hazırlanıyor.', null, null, null),
+   'NİFL AR-GE’nin en yeni takımı TEKNOFEST İnsansız Hava Aracı Yarışması’na hazırlanıyor.', null, null, null),
   ('2026', 'roket', 'gelisme', '25 finalistten biri olduk', 'ÖTR, KTR ve AHR raporlarını geçtik.', null, null, null),
   ('2025', 'roket', 'gelisme', 'İkinci sezon: roket düştü', 'Bu sezondan öğrendiklerimizle tasarımı yeniden kurduk.', null, null, null),
   ('2024', 'roket', 'gelisme', 'İlk sezon: Türkiye 8.si', 'Takım 2024’te kuruldu.', null, null, null)

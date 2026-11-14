@@ -1,4 +1,4 @@
-# NIFL ARGE · Supabase kurulumu
+# NİFL AR-GE · Supabase kurulumu
 
 Supabase bağlanana kadar site eskisi gibi çalışır: içerik `assets/data/site.js` dosyasından gelir ve form e-posta uygulamasını açar. Aşağıdaki adımlardan sonra:
 

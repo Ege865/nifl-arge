@@ -1,10 +1,10 @@
-/* NIFL ARGE — yönetim sayfası: sponsorluk talepleri, haberler ve sponsorlar (Supabase). */
-import { tarihYaz } from '../data/site.js?v=25';
-import { projeleriAl } from './db.js?v=25';
+/* NİFL AR-GE — yönetim sayfası: sponsorluk talepleri, haberler ve sponsorlar (Supabase). */
+import { tarihYaz } from '../data/site.js?v=27';
+import { projeleriAl } from './db.js?v=27';
 const projeler = await projeleriAl();
 const proje = s => projeler.find(p => p.slug === s);
-import { $, $$, esc, dithers } from './common.js?v=25';
-import { SUPABASE, dbAcik } from './db.js?v=25';
+import { $, $$, esc, dithers } from './common.js?v=27';
+import { SUPABASE, dbAcik } from './db.js?v=27';
 
 let sb = null;
 const KOVA = 'gorseller';
@@ -84,7 +84,7 @@ async function talepleriYukle() {
       <time datetime="${esc(t.created_at)}">${esc(new Date(t.created_at).toLocaleString('tr-TR', { dateStyle: 'long', timeStyle: 'short' }))}</time>
       <div>
         <h3>${esc(t.ad)} · ${esc(t.kurum)}</h3>
-        <p><a class="link" href="mailto:${esc(t.eposta)}?subject=${encodeURIComponent('NIFL ARGE sponsorluk talebiniz')}">${esc(t.eposta)}</a> · ${esc(t.proje)}</p>
+        <p><a class="link" href="mailto:${esc(t.eposta)}?subject=${encodeURIComponent('NİFL AR-GE sponsorluk talebiniz')}">${esc(t.eposta)}</a> · ${esc(t.proje)}</p>
         <p class="adm-msg">${esc(t.mesaj)}</p>
         <div class="adm-actions">
           <label class="sr-only" for="d-${t.id}">Durum</label>
@@ -134,7 +134,7 @@ async function haberleriYukle() {
 }
 function haberFormu() {
   const f = $('[data-haber-form]'), st = $('[data-status]', f);
-  f.elements.proje.innerHTML = projeSecenekleri('Genel (NIFL ARGE)');
+  f.elements.proje.innerHTML = projeSecenekleri('Genel (NİFL AR-GE)');
   f.elements.tarih.value = new Date().toLocaleDateString('sv-SE');
   f.addEventListener('submit', async e => {
     e.preventDefault();
@@ -195,7 +195,7 @@ async function sponsorlariYukle() {
 }
 function sponsorFormu() {
   const f = $('[data-sponsor-form]'), st = $('[data-status]', f);
-  f.elements.proje.innerHTML = projeSecenekleri('NIFL ARGE’nin tamamı');
+  f.elements.proje.innerHTML = projeSecenekleri('NİFL AR-GE’nin tamamı');
   f.addEventListener('submit', async e => {
     e.preventDefault();
     const v = n => f.elements[n].value.trim();

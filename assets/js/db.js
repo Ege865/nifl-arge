@@ -1,4 +1,4 @@
-/* NIFL ARGE — Supabase bağlantısı.
+/* NİFL AR-GE — Supabase bağlantısı.
    Aşağıdaki iki değeri Supabase panelinden alın: Project Settings → API Keys (ve Data API → Project URL).
    - url:     https://<proje-kodu>.supabase.co
    - anahtar: "publishable" (sb_publishable_...) ya da eski "anon public" anahtarı. Bu anahtar herkese açıktır;
@@ -9,7 +9,7 @@ export const SUPABASE = {
   anahtar: 'sb_publishable_ZESNmssXSu5ZV2o8l1-Mwg_ZY6K87O9'
 };
 
-import * as yerel from '../data/site.js?v=25';
+import * as yerel from '../data/site.js?v=27';
 
 export const dbAcik = () => /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(SUPABASE.url) && SUPABASE.anahtar.length > 20;
 

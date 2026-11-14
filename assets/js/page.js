@@ -1,7 +1,7 @@
-/* NIFL ARGE — inner pages: proje.html?p=<slug> and haberler.html */
-import { tarihYaz } from '../data/site.js?v=25';
-import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, form, icerikUygula } from './common.js?v=25';
-import { haberleriAl, gunlukAl, projeleriAl, icerikAl } from './db.js?v=25';
+/* NİFL AR-GE — inner pages: proje.html?p=<slug> and haberler.html */
+import { tarihYaz } from '../data/site.js?v=27';
+import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, form, icerikUygula } from './common.js?v=27';
+import { haberleriAl, gunlukAl, projeleriAl, icerikAl } from './db.js?v=27';
 
 const [projeler, sayfaMetni] = await Promise.all([projeleriAl(), icerikAl()]);
 const proje = s => projeler.find(p => p.slug === s);
@@ -12,9 +12,10 @@ const ext = h => (h.link ? ' target="_blank" rel="noopener"' : '');
 
 async function projectPage() {
   const slug = new URLSearchParams(location.search).get('p') || 'roket';
-  const p = proje(slug) || projeler[0];
+  const p = proje(slug);
+  if (!p) { location.replace('404.html'); return; } // bilinmeyen proje adresi: sessizce Aurora'yı açmak yerine 404
   const i = projeler.indexOf(p);
-  document.title = `${p.ad} · NIFL ARGE`;
+  document.title = `${p.ad} · NİFL AR-GE`;
   $('meta[name="description"]').content = p.ozet;
   $('[data-p="ad"]').textContent = p.ad;
   $('[data-p="ozet"]').textContent = p.ozet;

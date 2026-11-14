@@ -1,4 +1,4 @@
-/* NIFL ARGE — sitenin içerik dosyası.
+/* NİFL AR-GE — sitenin içerik dosyası.
    Projeleri, haberleri ve sponsorları buradan güncelleyin; sayfalar bu dosyadan okur.
    Supabase bağlandıktan sonra (assets/js/db.js) haberler, gelişmeler ve sponsorlar yönetim sayfasından
    (yonetim.html) yönetilir; buradaki haberler/gelismeler/sponsorlar yalnızca yedek olarak kullanılır.
@@ -85,7 +85,7 @@ export const projeler = [
     durum: '2026’da kuruldu',
     gorsel: 'assets/img/photo-f93507658-960.jpg',
     gorselAlt: 'Havada süzülen dört pervaneli bir insansız hava aracı',
-    ozet: 'NIFL ARGE’nin en yeni takımı. Hedefimiz TEKNOFEST’te Türkiye birinciliği.',
+    ozet: 'NİFL AR-GE’nin en yeni takımı. Hedefimiz TEKNOFEST’te Türkiye birinciliği.',
     bilgiler: [
       ['Kuruluş', '2026'],
       ['Yarışma', 'TEKNOFEST İHA'],
@@ -100,7 +100,7 @@ export const projeler = [
     ekip: [],
     galeri: [],
     gelismeler: [
-      { tarih: '2026', baslik: 'GökTürk İHA Takımı kuruldu', metin: 'Takım NIFL ARGE çatısı altında çalışmaya başladı.' }
+      { tarih: '2026', baslik: 'GökTürk İHA Takımı kuruldu', metin: 'Takım NİFL AR-GE çatısı altında çalışmaya başladı.' }
     ]
   },
   {
@@ -197,7 +197,7 @@ export const haberler = [
     tarih: '2026',
     proje: 'iha',
     baslik: 'GökTürk İHA Takımı kuruldu',
-    metin: 'NIFL ARGE’nin en yeni takımı TEKNOFEST İnsansız Hava Aracı Yarışması’na hazırlanıyor.'
+    metin: 'NİFL AR-GE’nin en yeni takımı TEKNOFEST İnsansız Hava Aracı Yarışması’na hazırlanıyor.'
   },
   {
     tarih: '2022-04-15',

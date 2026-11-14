@@ -1,7 +1,7 @@
-/* NIFL ARGE — home: content from assets/data/site.js, then the GSAP layer. */
-import { tarihYaz } from '../data/site.js?v=25';
-import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, faq, form, icerikUygula } from './common.js?v=25';
-import { haberleriAl, sponsorlariAl, projeleriAl, icerikAl } from './db.js?v=25';
+/* NİFL AR-GE — home: content from assets/data/site.js, then the GSAP layer. */
+import { tarihYaz } from '../data/site.js?v=27';
+import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, faq, form, icerikUygula } from './common.js?v=27';
+import { haberleriAl, sponsorlariAl, projeleriAl, icerikAl } from './db.js?v=27';
 
 // projects and page texts come from Supabase (site.js if it can't be reached); texts land before anything is split or animated
 const [projeler, sayfaMetni] = await Promise.all([projeleriAl(), icerikAl()]);
@@ -69,7 +69,7 @@ async function renderSponsors() {
 
 /* ---------------- tabs ---------------- */
 
-let cur = 0, pin = null;
+let cur = 0;
 const N = projeler.length;
 
 function ink(instant) {
@@ -106,13 +106,7 @@ function show(i, { focus, instant } = {}) {
 
 function tabsInit() {
   const tabs = $$('.tab');
-  const go = i => {
-    if (pin) {
-      const y = pin.start + (pin.end - pin.start) * (i / (N - 1));
-      scrollTo({ top: y + 1, behavior: reduced() ? 'auto' : 'smooth' });
-    }
-    show(i);
-  };
+  const go = i => show(i);
   tabs.forEach((t, i) => {
     t.addEventListener('click', () => go(i));
     t.addEventListener('keydown', e => {
@@ -135,19 +129,6 @@ function intro() {
     .from('[data-rise]', { y: 18, autoAlpha: 0, duration: 1, stagger: .07 }, .25)
     .from('.showcase', { y: 60, autoAlpha: 0, duration: 1.4 }, .35)
     .from('.haze', { autoAlpha: 0, duration: 1.6 }, 0);
-}
-
-function showcasePin(mm) {
-  mm.add('(min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)', () => {
-    pin = ScrollTrigger.create({
-      trigger: '#projeler', start: () => `top top+=${$('.nav').offsetHeight - 1}`,
-      end: () => '+=' + Math.round(innerHeight * .6 * (N - 1)),
-      pin: true, anticipatePin: 1,
-      snap: { snapTo: 1 / (N - 1), duration: { min: .25, max: .6 }, delay: .1, ease: 'power2.inOut' },
-      onUpdate: self => { const i = Math.round(self.progress * (N - 1)); if (i !== cur) show(i); }
-    });
-    return () => { pin = null; };
-  });
 }
 
 function manifesto() {
@@ -259,7 +240,6 @@ const boot = () => {
   const mm = gsap.matchMedia();
   intro();
   document.documentElement.classList.add('ready');
-  showcasePin(mm);
   manifesto();
   flight(mm);
   seasons();

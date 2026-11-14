@@ -1,6 +1,6 @@
-/* NIFL ARGE — shared: dither and halftone grounds, nav sheet, FAQ, form, helpers. */
-import { iletisim } from '../data/site.js?v=25';
-import { dbAcik, talepGonder } from './db.js?v=25';
+/* NİFL AR-GE — shared: dither and halftone grounds, nav sheet, FAQ, form, helpers. */
+import { iletisim } from '../data/site.js?v=27';
+import { dbAcik, talepGonder } from './db.js?v=27';
 
 export const $ = (s, r = document) => r.querySelector(s);
 export const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -118,8 +118,9 @@ export function form() {
   const f = $('[data-form]');
   if (!f) return;
   const db = dbAcik();
+  const acildi = Date.now();
   const status = $('[data-status]', f), btn = $('button[type="submit"]', f), note = $('.form__note', f);
-  if (db) { f.removeAttribute('action'); note.textContent = 'Talebiniz NIFL ARGE ekibine iletilir. Size e-postayla dönüş yapılır.'; }
+  if (db) { f.removeAttribute('action'); note.textContent = 'Talebiniz NİFL AR-GE ekibine iletilir. Size e-postayla dönüş yapılır.'; }
   else f.action = `mailto:${iletisim.eposta}?subject=${encodeURIComponent('Sponsorluk talebi')}`;
   f.addEventListener('submit', async e => {
     const bad = [];
@@ -142,7 +143,10 @@ export function form() {
     const v = n => (f.elements[n]?.value || '').trim();
     const eposta = v('eposta');
     const tamam = () => { f.reset(); status.textContent = `Talebiniz alındı. ${eposta} adresinize en kısa sürede yazacağız.`; };
-    if (v('web')) { tamam(); return; } // bot tuzağı: insanlar bu gizli alanı görmez
+    // bot tuzağı: gizli alan doluysa VE form açıldıktan sonraki 3 saniye içinde gönderildiyse bottur.
+    // Tarayıcının otomatik doldurması alanı doldursa bile bir insan formu bu kadar hızlı gönderemez,
+    // böylece gerçek bir talep sessizce kaybolmaz; geri kalan spamı veritabanındaki sınır yakalar.
+    if (v('kutu_bos') && Date.now() - acildi < 3000) { tamam(); return; }
     btn.disabled = true;
     status.textContent = 'Gönderiliyor…';
     try {
