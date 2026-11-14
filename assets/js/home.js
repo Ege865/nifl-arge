@@ -190,7 +190,8 @@ function flight(mm) {
     clipDown(0);
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
-      scrollTrigger: { trigger: sec, start: 'top top', end: '+=220%', pin: true, scrub: .7, anticipatePin: 1 }
+      // no GSAP pin: the section is position: sticky inside its track (see .flight-track), the timeline only scrubs
+      scrollTrigger: { trigger: sec.parentElement, start: 'top top', end: 'bottom bottom', scrub: .7 }
     });
     tl.to('.flight__text', { autoAlpha: 1, x: 0, duration: .08, ease: 'power2.out' }, 0)
       .fromTo('.flight__img', { scale: 1.05 }, { scale: 1, duration: 1 }, 0)

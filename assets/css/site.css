@@ -30,7 +30,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scrollbar-color: rgba(16, 18, 22, .3) transparent; caret-color: var(--coral); }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--font); -webkit-font-smoothing: antialiased; font-feature-settings: "ss01", "tnum"; overflow-x: hidden; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--font); -webkit-font-smoothing: antialiased; font-feature-settings: "ss01", "tnum"; overflow-x: clip; }
 img { display: block; max-width: 100%; }
 a { color: inherit; }
 ::selection { background: var(--coral); color: var(--ink); }
@@ -183,6 +183,11 @@ h1, h2, h3 { font-weight: 500; letter-spacing: -0.035em; text-wrap: balance; }
 
 /* ---------- the flight (Solidroad chapter) over the team's photo of the range ---------- */
 .flight { position: relative; height: 100svh; min-height: 600px; overflow: hidden; background: #3f8ad6; color: var(--ink); }
+/* the flight stays on screen with position: sticky inside a tall track, so the browser places it every frame:
+   it can never be pinned at a stale offset and slide over the manifesto above it */
+.js .flight-track { position: relative; height: calc(max(100svh, 600px) + 220svh); }
+.js .flight-track > .flight { position: sticky; top: 0; }
+@media (prefers-reduced-motion: reduce) { .js .flight-track { height: auto; } .js .flight-track > .flight { position: relative; } }
 .flight__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 .flight__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .flight__up { fill: none; stroke: var(--coral); stroke-width: 6; stroke-linecap: round; vector-effect: non-scaling-stroke; }
