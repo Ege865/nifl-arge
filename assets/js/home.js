@@ -1,7 +1,7 @@
 /* NIFL ARGE — home: content from assets/data/site.js, then the GSAP layer. */
-import { projeler, tarihYaz, proje } from '../data/site.js?v=21';
-import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, faq, form } from './common.js?v=21';
-import { haberleriAl, sponsorlariAl } from './db.js?v=21';
+import { projeler, tarihYaz, proje } from '../data/site.js?v=23';
+import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, faq, form } from './common.js?v=23';
+import { haberleriAl, sponsorlariAl } from './db.js?v=23';
 
 /* ---------------- content ---------------- */
 
@@ -259,5 +259,31 @@ const boot = () => {
   hub();
   dithers();
   ScrollTrigger.refresh();
+  keepPinsMeasured();
 };
-(document.fonts?.ready || Promise.resolve()).then(boot);
+// measure only after every Switzer weight is in: a late swap reflows the manifesto and would shift the flight
+// (capped at 2.5 s on a slow connection; keepPinsMeasured catches anything later)
+const fontsIn = document.fonts
+  ? Promise.all(['400', '500', '600'].map(w => document.fonts.load(`${w} 16px Switzer`))).catch(() => {}).then(() => document.fonts.ready)
+  : Promise.resolve();
+Promise.race([fontsIn, new Promise(r => setTimeout(r, 2500))]).then(boot);
+
+/* The pinned sections (projects, Semrük's flight) measure their start once. If anything above them changes
+   height later — a late font swap reflowing the manifesto, an image, the news arriving — the flight would pin
+   too early and slide over the text. So re-measure whenever a section's height actually changes. */
+function keepPinsMeasured() {
+  if (!('ResizeObserver' in window)) return;
+  const heights = new Map();
+  let t;
+  const ro = new ResizeObserver(entries => {
+    let changed = false;
+    entries.forEach(e => {
+      const h = Math.round(e.contentRect.height);
+      if (heights.has(e.target) && heights.get(e.target) !== h) changed = true;
+      heights.set(e.target, h);
+    });
+    if (changed) { clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 120); }
+  });
+  $$('main section, main .cut').forEach(el => ro.observe(el));
+  document.fonts?.addEventListener?.('loadingdone', () => { clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 120); });
+}

@@ -180,6 +180,14 @@ export const haberler = [
     metin: 'Takım, A1 ve A2 kategorilerinde ayrı ayrı yarışmak için hazırlanıyor.'
   },
   {
+    tarih: '2026-10-29',
+    proje: 'genel',
+    baslik: 'Tabiat ve Yaşanabilir Çevre Bilgi Yarışması’nda Bursa il birincisi olduk',
+    metin: 'MEB’in COP31 Türkiye kapsamında düzenlediği yarışmanın 27 Ekim’deki il finalinde sekiz takım yarıştı. Tüm soruları doğru yanıtlayıp eşitlik bozma sorularıyla birinciliği aldık.',
+    link: 'https://www.bursasoylem.com/2026/10/29/tabiat-ve-yasanabilir-cevre-bilgi-yarismasi-bursa-il-finalinde-birincilik-niluferin-oldu/',
+    kaynak: 'Bursa Söylem'
+  },
+  {
     tarih: '2026-09',
     proje: 'roket',
     baslik: 'Semrük Aksaray’da 3.350 metreye çıktı',
@@ -190,6 +198,14 @@ export const haberler = [
     proje: 'iha',
     baslik: 'GökTürk İHA Takımı kuruldu',
     metin: 'NIFL ARGE’nin en yeni takımı TEKNOFEST İnsansız Hava Aracı Yarışması’na hazırlanıyor.'
+  },
+  {
+    tarih: '2022-04-15',
+    proje: 'genel',
+    baslik: 'Okulumuzun NİF Matematik Yarışması ilk kez ulusal düzeyde yapıldı',
+    metin: 'Bursa Büyükşehir Belediyesi ile birlikte düzenlediğimiz yarışmanın dördüncüsüne Bursa dışında dokuz ilden 8. sınıf öğrencileri katıldı.',
+    link: 'https://www.iscihaber.net/yasam/bursada-matematik-icin-ter-doktuler/67950',
+    kaynak: 'İşçi Haber'
   }
 ];
 

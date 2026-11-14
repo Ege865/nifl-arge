@@ -1,6 +1,6 @@
 /* NIFL ARGE — shared: dither and halftone grounds, nav sheet, FAQ, form, helpers. */
-import { iletisim } from '../data/site.js?v=21';
-import { dbAcik, talepGonder } from './db.js?v=21';
+import { iletisim } from '../data/site.js?v=23';
+import { dbAcik, talepGonder } from './db.js?v=23';
 
 export const $ = (s, r = document) => r.querySelector(s);
 export const $$ = (s, r = document) => [...r.querySelectorAll(s)];
