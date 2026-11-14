@@ -9,7 +9,7 @@ export const SUPABASE = {
   anahtar: 'sb_publishable_ZESNmssXSu5ZV2o8l1-Mwg_ZY6K87O9'
 };
 
-import * as yerel from '../data/site.js?v=19';
+import * as yerel from '../data/site.js?v=21';
 
 export const dbAcik = () => /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(SUPABASE.url) && SUPABASE.anahtar.length > 20;
 

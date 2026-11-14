@@ -1,7 +1,7 @@
 /* NIFL ARGE — yönetim sayfası: sponsorluk talepleri, haberler ve sponsorlar (Supabase). */
-import { projeler, tarihYaz, proje } from '../data/site.js?v=19';
-import { $, $$, esc, dithers } from './common.js?v=19';
-import { SUPABASE, dbAcik } from './db.js?v=19';
+import { projeler, tarihYaz, proje } from '../data/site.js?v=21';
+import { $, $$, esc, dithers } from './common.js?v=21';
+import { SUPABASE, dbAcik } from './db.js?v=21';
 
 let sb = null;
 const KOVA = 'gorseller';

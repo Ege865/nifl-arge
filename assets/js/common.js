@@ -1,6 +1,6 @@
 /* NIFL ARGE — shared: dither and halftone grounds, nav sheet, FAQ, form, helpers. */
-import { iletisim } from '../data/site.js?v=19';
-import { dbAcik, talepGonder } from './db.js?v=19';
+import { iletisim } from '../data/site.js?v=21';
+import { dbAcik, talepGonder } from './db.js?v=21';
 
 export const $ = (s, r = document) => r.querySelector(s);
 export const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -146,7 +146,7 @@ export function form() {
     btn.disabled = true;
     status.textContent = 'Gönderiliyor…';
     try {
-      await talepGonder({ ad: v('ad'), kurum: v('kurum'), eposta, proje: v('proje'), mesaj: v('mesaj'), aydinlatma: true });
+      await talepGonder({ ad: v('ad'), kurum: v('kurum'), eposta, proje: v('proje'), mesaj: v('destek') ? `Destek türü: ${v('destek')}\n\n${v('mesaj')}` : v('mesaj'), aydinlatma: true });
       tamam();
     } catch (err) {
       status.innerHTML = err.kod === 'sinir'

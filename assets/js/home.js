@@ -1,7 +1,7 @@
 /* NIFL ARGE — home: content from assets/data/site.js, then the GSAP layer. */
-import { projeler, tarihYaz, proje } from '../data/site.js?v=19';
-import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, faq, form } from './common.js?v=19';
-import { haberleriAl, sponsorlariAl } from './db.js?v=19';
+import { projeler, tarihYaz, proje } from '../data/site.js?v=21';
+import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, faq, form } from './common.js?v=21';
+import { haberleriAl, sponsorlariAl } from './db.js?v=21';
 
 /* ---------------- content ---------------- */
 

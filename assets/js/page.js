@@ -1,7 +1,7 @@
 /* NIFL ARGE — inner pages: proje.html?p=<slug> and haberler.html */
-import { projeler, tarihYaz, proje } from '../data/site.js?v=19';
-import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, form } from './common.js?v=19';
-import { haberleriAl, gunlukAl } from './db.js?v=19';
+import { projeler, tarihYaz, proje } from '../data/site.js?v=21';
+import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, form } from './common.js?v=21';
+import { haberleriAl, gunlukAl } from './db.js?v=21';
 
 const linkOf = h => h.link || (proje(h.proje) ? `proje.html?p=${h.proje}` : 'haberler.html');
 const ext = h => (h.link ? ' target="_blank" rel="noopener"' : '');
