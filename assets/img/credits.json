@@ -1,0 +1,62 @@
+{
+ "note": "Credits for the photographs in this folder: photos.mjs credits prints the footer block for the ones the pages use.",
+ "photos": [
+  {
+   "file": "photo-f93507658.jpg",
+   "files": [
+    "photo-f93507658-500.jpg",
+    "photo-f93507658-960.jpg",
+    "photo-f93507658.jpg"
+   ],
+   "id": "f93507658",
+   "alt": "Quadcopter Drone in flight",
+   "by": "Project Kei",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Quadcopter_Drone_in_flight.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f4071999-960.jpg",
+   "files": [
+    "photo-f4071999-500.jpg",
+    "photo-f4071999-960.jpg"
+   ],
+   "id": "f4071999",
+   "alt": "Soldering a 0805",
+   "by": "Aisart",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Soldering_a_0805.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f163872371-960.jpg",
+   "files": [
+    "photo-f163872371-500.jpg",
+    "photo-f163872371-960.jpg"
+   ],
+   "id": "f163872371",
+   "alt": "2024 Student Launch (20240413-MIC 8508)",
+   "by": "NASA Marshall Space Flight Center / Mick Speer",
+   "licence": "Public domain",
+   "licenceUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+   "page": "https://commons.wikimedia.org/wiki/File:2024_Student_Launch_(20240413-MIC_8508).jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f28083954-960.jpg",
+   "files": [
+    "photo-f28083954-500.jpg",
+    "photo-f28083954-960.jpg"
+   ],
+   "id": "f28083954",
+   "alt": "Sanpa solar powered underwater vehicle InnovationDay2013part2-27",
+   "by": "Vitaly V. Kuzmin",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Sanpa_solar_powered_underwater_vehicle_InnovationDay2013part2-27.jpg",
+   "source": "Wikimedia Commons"
+  }
+ ]
+}

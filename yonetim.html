@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="tr" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yönetim · NIFL ARGE</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/img/logo-mark.png" type="image/png">
+<meta name="theme-color" content="#eef0f3">
+<link rel="preload" href="assets/fonts/switzer-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css?v=20">
+<script>document.documentElement.classList.replace('no-js','js')</script>
+</head>
+<body>
+<a class="skip" href="#icerik">İçeriğe geç</a>
+<header class="nav">
+  <div class="rails"><div class="inner">
+    <a class="brand" href="index.html" aria-label="NIFL ARGE ana sayfa"><img src="assets/img/logo-mark.png" alt="" width="275" height="380"><img src="assets/img/logo-word.png" alt="" width="446" height="477"></a>
+    <div class="nav__end adm-end">
+      <a class="btn btn--ghost adm-back" href="index.html">Siteye dönün</a>
+    </div>
+  </div></div>
+</header>
+<main id="icerik">
+  <div class="rails">
+    <canvas class="haze" data-haze aria-hidden="true"></canvas>
+    <header class="page-head inner">
+      <nav class="crumbs" aria-label="Konum"><a href="index.html">Ana sayfa</a><span aria-hidden="true">/</span><span>Yönetim</span></nav>
+      <h1>Yönetim</h1>
+      <p>Sponsorluk taleplerini okuyun, haber ve sponsor ekleyin. Buradaki değişiklikler sitede hemen görünür.</p>
+    </header>
+    <div class="cut" aria-hidden="true"></div>
+
+    <section class="sec sec--tight inner adm" aria-label="Yönetim paneli">
+      <div class="note" data-off hidden>
+        <p>Supabase bağlantısı henüz kurulmadı.</p>
+        <p>assets/js/db.js dosyasına Project URL ve publishable anahtarı yazıldığında bu sayfa giriş ekranını gösterir. Adımlar supabase/KURULUM.md dosyasında.</p>
+      </div>
+
+      <form class="form adm-login" data-login novalidate hidden>
+        <h2 class="h2" style="font-size:28px">Giriş yapın</h2>
+        <div class="field"><label for="l-eposta">E-posta</label><input id="l-eposta" name="eposta" type="email" autocomplete="username" required></div>
+        <div class="field"><label for="l-sifre">Şifre</label><input id="l-sifre" name="sifre" type="password" autocomplete="current-password" required></div>
+        <div><button class="btn btn--coral btn--lg" type="submit">Giriş yapın</button></div>
+        <p class="form__status" role="status" data-login-status></p>
+        <p class="form__note">Hesapları okuldaki site sorumlusu açar. Dışarıdan kayıt kapalıdır.</p>
+      </form>
+
+      <div data-panel hidden>
+        <div class="adm-bar">
+          <div class="filters" role="group" aria-label="Bölüm" data-tabs>
+            <button type="button" aria-pressed="true" data-tab="talepler">Talepler<span data-count></span></button>
+            <button type="button" aria-pressed="false" data-tab="haberler">Haberler</button>
+            <button type="button" aria-pressed="false" data-tab="sponsorlar">Sponsorlar</button>
+          </div>
+          <p class="adm-who"><span data-who></span> <button class="btn btn--ghost btn--sm" type="button" data-logout>Çıkış yapın</button></p>
+        </div>
+
+        <div data-view="talepler">
+          <div data-talepler></div>
+        </div>
+
+        <div class="split split--5-7 adm-split" data-view="haberler" hidden>
+          <form class="form" data-haber-form novalidate>
+            <h2 class="h2" style="font-size:24px">Haber ekleyin</h2>
+            <div class="row">
+              <div class="field"><label for="h-tarih">Tarih</label><input id="h-tarih" name="tarih" inputmode="numeric" placeholder="2026-11-14"></div>
+              <div class="field"><label for="h-tur">Tür</label><select id="h-tur" name="tur"><option value="haber">Haber (ana sayfada)</option><option value="gelisme">Proje gelişmesi</option></select></div>
+            </div>
+            <div class="field"><label for="h-proje">Proje</label><select id="h-proje" name="proje"></select></div>
+            <div class="field"><label for="h-baslik">Başlık</label><input id="h-baslik" name="baslik" maxlength="200" required></div>
+            <div class="field"><label for="h-metin">Kısa metin</label><textarea id="h-metin" name="metin" maxlength="2000"></textarea></div>
+            <div class="row">
+              <div class="field"><label for="h-link">Haber bağlantısı (isteğe bağlı)</label><input id="h-link" name="link" type="url" placeholder="https://"></div>
+              <div class="field"><label for="h-kaynak">Kaynak (isteğe bağlı)</label><input id="h-kaynak" name="kaynak" maxlength="80" placeholder="ör. DHA"></div>
+            </div>
+            <div class="field"><label for="h-gorsel">Görsel (isteğe bağlı, en fazla 3 MB)</label><input id="h-gorsel" name="gorsel" type="file" accept="image/jpeg,image/png,image/webp"></div>
+            <div><button class="btn btn--coral btn--lg" type="submit">Haberi yayınlayın</button></div>
+            <p class="form__status" role="status" data-status></p>
+          </form>
+          <div data-haberler></div>
+        </div>
+
+        <div class="split split--5-7 adm-split" data-view="sponsorlar" hidden>
+          <form class="form" data-sponsor-form novalidate>
+            <h2 class="h2" style="font-size:24px">Sponsor ekleyin</h2>
+            <div class="field"><label for="s-ad">Sponsorun adı</label><input id="s-ad" name="ad" maxlength="120" required></div>
+            <div class="field"><label for="s-logo">Logo (PNG, SVG ya da WebP; en fazla 3 MB)</label><input id="s-logo" name="logo" type="file" accept="image/png,image/svg+xml,image/webp,image/jpeg" required></div>
+            <div class="field"><label for="s-url">Web sitesi (isteğe bağlı)</label><input id="s-url" name="url" type="url" placeholder="https://"></div>
+            <div class="row">
+              <div class="field"><label for="s-proje">Desteklediği proje</label><select id="s-proje" name="proje"></select></div>
+              <div class="field"><label for="s-sira">Sıra</label><input id="s-sira" name="sira" type="number" min="1" max="999" value="100"></div>
+            </div>
+            <div><button class="btn btn--coral btn--lg" type="submit">Sponsoru ekleyin</button></div>
+            <p class="form__status" role="status" data-status></p>
+          </form>
+          <div data-sponsorlar></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="foot">
+  <canvas class="foot__dots" data-dots aria-hidden="true"></canvas>
+  <div class="rails"><div class="inner">
+    <div class="foot__legal"><span>© 2026 NIFL ARGE</span><nav aria-label="Yasal"><a href="kvkk.html">KVKK aydınlatma metni</a><a href="index.html">Ana sayfa</a></nav></div>
+  </div></div>
+</footer>
+
+<script src="assets/vendor/supabase.min.js"></script>
+<script type="module" src="assets/js/yonetim.js?v=19"></script>
+</body>
+</html>
