@@ -166,6 +166,7 @@ function manifesto() {
    each marker arrives when the line reaches it. */
 function flight(mm) {
   const sec = $('[data-flight]');
+  if (!sec) return;
   const up = $('.flight__up', sec), down = $('.flight__down', sec);
   const alt = $('[data-alt]', sec);
   const marks = $$('.mark', sec);
@@ -215,6 +216,7 @@ function flight(mm) {
 
 function seasons() {
   const box = $('[data-seasons]');
+  if (!box) return;
   const items = $$('.season', box);
   if (reduced()) { items.forEach(s => s.classList.add('is-on')); return; }
   gsap.fromTo(box, { '--bar': 0 }, { '--bar': 1, ease: 'none', scrollTrigger: { trigger: box, start: 'top 75%', end: 'bottom 60%', scrub: .5 } });
