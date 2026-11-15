@@ -57,12 +57,12 @@ export const projeler = [
   {
     slug: 'denizalti',
     baslik: 'Su altına iniyoruz.', // vitrin panelindeki büyük slogan
-    ad: 'Denizaltı Takımı',
+    ad: 'Dalayhan Denizaltı Takımı',
     alan: 'Su altı',
     kisa: 'İnsansız su altı aracı',
     durum: 'Tasarım aşamasında',
-    gorsel: 'assets/img/photo-f28083954-960.jpg',
-    gorselAlt: 'Sarı gövdeli, güneş panelli bir su altı aracı',
+    gorsel: 'assets/img/dalayhan-rov.jpg',
+    gorselAlt: 'Dalayhan insansız su altı aracının bilgisayar tasarımı: lacivert gövde çerçevesi, turuncu motor yuvaları ve şeffaf tüpler',
     ozet: 'Takımımız insansız su altı aracını tasarlıyor ve yarışmalara hazırlanıyor.',
     bilgiler: [
       ['Alan', 'İnsansız su altı aracı'],
@@ -70,7 +70,7 @@ export const projeler = [
       ['Hedef', 'Ulusal yarışmalar']
     ],
     hakkinda: [
-      'Aktif olarak çalışan takımımız su altı aracını tasarlıyor ve yarışmalara hazırlanıyor.'
+      'Dalayhan takımımız insansız su altı aracını tasarlıyor ve yarışmalara hazırlanıyor.'
     ],
     ekip: [],
     galeri: [],
