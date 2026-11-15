@@ -1,7 +1,7 @@
 /* NİFL AR-GE — inner pages: proje.html?p=<slug> and haberler.html */
-import { tarihYaz } from '../data/site.js?v=27';
-import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, form, icerikUygula } from './common.js?v=27';
-import { haberleriAl, gunlukAl, projeleriAl, icerikAl } from './db.js?v=27';
+import { tarihYaz } from '../data/site.js?v=35';
+import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, form, icerikUygula } from './common.js?v=35';
+import { haberleriAl, gunlukAl, projeleriAl, icerikAl } from './db.js?v=35';
 
 const [projeler, sayfaMetni] = await Promise.all([projeleriAl(), icerikAl()]);
 const proje = s => projeler.find(p => p.slug === s);

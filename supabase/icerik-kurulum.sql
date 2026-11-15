@@ -54,7 +54,7 @@ grant select on public.projeler to anon;
 grant select, insert, update, delete on public.projeler to authenticated;
 
 insert into public.icerik (anahtar, deger, tur, sayfa, sira) values
-  ('ortak.eposta', 'iletisim@niflarge.example', 'metin', 'ortak', 0),
+  ('ortak.eposta', 'aliege22022011@gmail.com', 'metin', 'ortak', 0),
   ('index.hero.h11', 'NİFL AR-GE', 'metin', 'index', 1),
   ('index.hero.p1', 'Nilüfer Borsa İstanbul Fen Lisesi’nin Ar-Ge birimi. Aurora Roket Takımımız <strong>1.629 takım arasında Türkiye birincisi</strong> oldu.', 'html', 'index', 2),
   ('index.hero.a1', 'Sponsor olun / Bağış yapın', 'metin', 'index', 3),

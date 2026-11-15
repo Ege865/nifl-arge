@@ -1,7 +1,7 @@
 /* NİFL AR-GE — home: content from assets/data/site.js, then the GSAP layer. */
-import { tarihYaz } from '../data/site.js?v=27';
-import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, faq, form, icerikUygula } from './common.js?v=27';
-import { haberleriAl, sponsorlariAl, projeleriAl, icerikAl } from './db.js?v=27';
+import { tarihYaz } from '../data/site.js?v=35';
+import { $, $$, esc, ARROW, reduced, gsapOk, dithers, navSheet, faq, form, icerikUygula } from './common.js?v=35';
+import { haberleriAl, sponsorlariAl, projeleriAl, icerikAl } from './db.js?v=35';
 
 // projects and page texts come from Supabase (site.js if it can't be reached); texts land before anything is split or animated
 const [projeler, sayfaMetni] = await Promise.all([projeleriAl(), icerikAl()]);

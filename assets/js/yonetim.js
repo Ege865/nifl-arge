@@ -1,10 +1,10 @@
 /* NİFL AR-GE — yönetim sayfası: sponsorluk talepleri, haberler ve sponsorlar (Supabase). */
-import { tarihYaz } from '../data/site.js?v=27';
-import { projeleriAl } from './db.js?v=27';
+import { tarihYaz } from '../data/site.js?v=35';
+import { projeleriAl } from './db.js?v=35';
 const projeler = await projeleriAl();
 const proje = s => projeler.find(p => p.slug === s);
-import { $, $$, esc, dithers } from './common.js?v=27';
-import { SUPABASE, dbAcik } from './db.js?v=27';
+import { $, $$, esc, dithers } from './common.js?v=35';
+import { SUPABASE, dbAcik } from './db.js?v=35';
 
 let sb = null;
 const KOVA = 'gorseller';

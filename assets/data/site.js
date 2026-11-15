@@ -8,7 +8,7 @@
    - Bir alanı boş bırakmak için "" ya da [] yazın; sayfa o bölümü gizler. */
 
 export const iletisim = {
-  eposta: 'iletisim@niflarge.example', // GERÇEK ADRES GELİNCE DEĞİŞTİRİN
+  eposta: 'aliege22022011@gmail.com', // GERÇEK ADRES GELİNCE DEĞİŞTİRİN
   adres: 'Erdoğan Binyücel Caddesi, Odunluk, Nilüfer / Bursa',
   harita: 'https://www.openstreetmap.org/search?query=Erdo%C4%9Fan%20Biny%C3%BCcel%20Caddesi%20Odunluk%20Nil%C3%BCfer%20Bursa',
   sosyal: [] // ör. { ad: 'Instagram', url: 'https://instagram.com/...' }
