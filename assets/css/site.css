@@ -454,3 +454,12 @@ h1, h2, h3 { font-weight: 500; letter-spacing: -0.035em; text-wrap: balance; }
 /* full logo (mark + NİFL arge) as the hero background */
 .hero--photo .hero__bg { height: 112%; right: 4%; opacity: .85; }
 @media (max-width: 639px) { .hero--photo .hero__bg { top: 4%; height: 50%; opacity: .5; } }
+
+/* the logo sits in its own box so it is always whole and centred; GSAP only moves the image inside */
+.hero__mark { position: absolute; z-index: -2; top: 6%; bottom: 6%; right: 5%; width: 42%; display: grid; place-items: center; pointer-events: none; }
+.hero--photo .hero__mark .hero__bg { position: static; inset: auto; top: auto; right: auto; left: auto; transform: none; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+@media (max-width: 900px) {
+  .hero__mark { top: 5%; bottom: auto; left: 0; right: 0; width: auto; height: 46%; }
+  .hero--photo .hero__mark .hero__bg { opacity: .5; }
+  .hero--photo .hero__shade { background: linear-gradient(to top, rgba(14, 16, 20, .95) 0%, rgba(14, 16, 20, .7) 45%, rgba(14, 16, 20, 0) 80%); }
+}
