@@ -59,7 +59,7 @@ insert into public.icerik (anahtar, deger, tur, sayfa, sira) values
   ('index.hero.p1', 'Nilüfer Borsa İstanbul Fen Lisesi’nin Ar-Ge birimi. Aurora Roket Takımımız <strong>1.629 takım arasında Türkiye birincisi</strong> oldu.', 'html', 'index', 2),
   ('index.hero.a1', 'Sponsor olun / Bağış yapın', 'metin', 'index', 3),
   ('index.hero.a2', 'Projeleri inceleyin', 'metin', 'index', 4),
-  ('index.hero.gorsel1', 'assets/img/logo-mark.png', 'gorsel', 'index', 0),
+  ('index.hero.gorsel1', 'assets/img/logo-lockup.png', 'gorsel', 'index', 0),
   ('index.hero.gorsel1.alt', '', 'metin', 'index', 0),
   ('index.arge.p1', 'Birçok lisede bir fikir proje ödevi olarak başlar ve not alınınca biter. Bizde aynı fikir bir rapora, bir prototipe, sonra bir yarışma sahasına gider.', 'metin', 'index', 7),
   ('index.arge.p2', 'NİFL AR-GE’yi okul müdürümüz Mustafa Ersoy kurdu. Bugün roket, su altı, hava, ekoloji ve TÜBİTAK projelerinde çalışan öğrencileri aynı çatı altında topluyor. <span class="accent">Amacımız Ar-Ge kültürünü önce okulumuzda, sonra Bursa’da ve Türkiye’de yaymak.</span>', 'html', 'index', 8),
