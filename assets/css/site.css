@@ -463,3 +463,5 @@ h1, h2, h3 { font-weight: 500; letter-spacing: -0.035em; text-wrap: balance; }
   .hero--photo .hero__mark .hero__bg { opacity: .5; }
   .hero--photo .hero__shade { background: linear-gradient(to top, rgba(14, 16, 20, .95) 0%, rgba(14, 16, 20, .7) 45%, rgba(14, 16, 20, 0) 80%); }
 }
+.hero__mark { display: flex; justify-content: center; align-items: center; }
+.hero--photo .hero__mark .hero__bg { height: 100%; width: auto; max-height: none; }
