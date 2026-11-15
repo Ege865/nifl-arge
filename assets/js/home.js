@@ -128,7 +128,31 @@ function intro() {
     .from(s.lines, { yPercent: 105, duration: 1.2, stagger: .1 }, 0)
     .from('[data-rise]', { y: 18, autoAlpha: 0, duration: 1, stagger: .07 }, .25)
     .from('.showcase', { y: 60, autoAlpha: 0, duration: 1.4 }, .35)
-    .from('.haze', { autoAlpha: 0, duration: 1.6 }, 0);
+    .from('.haze', { autoAlpha: 0, duration: 1.6 }, 0)
+    .from('.hero__bg', { autoAlpha: 0, scale: .85, duration: 2.2, ease: 'expo.out' }, 0);
+  // the numbers count up as the page opens
+  $$('[data-count]').forEach(d => {
+    const n = +d.dataset.count, o = { v: 0 };
+    gsap.to(o, { v: n, duration: 1.8, delay: .5, ease: 'power3.out', onUpdate: () => (d.textContent = Math.round(o.v).toLocaleString('tr-TR')) });
+  });
+  // the photo drifts slower than the page
+  gsap.to('.hero__bg', { y: 80, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+}
+
+/* "roket → su altı aracı → İHA → sera": what the unit builds, one word at a time */
+function rotator() {
+  const el = $('[data-words]');
+  if (!el || reduced()) return;
+  const words = el.dataset.words.split('|');
+  let i = 0;
+  setInterval(() => {
+    i = (i + 1) % words.length;
+    if (!gsapOk()) { el.textContent = words[i]; return; }
+    gsap.to(el, { yPercent: -60, autoAlpha: 0, duration: .3, ease: 'power2.in', onComplete: () => {
+      el.textContent = words[i];
+      gsap.fromTo(el, { yPercent: 60, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: .55, ease: 'expo.out' });
+    } });
+  }, 2200);
 }
 
 function manifesto() {
@@ -239,6 +263,7 @@ const boot = () => {
   gsap.registerPlugin(ScrollTrigger, SplitText);
   const mm = gsap.matchMedia();
   intro();
+  rotator();
   document.documentElement.classList.add('ready');
   manifesto();
   flight(mm);

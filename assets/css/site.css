@@ -410,3 +410,43 @@ h1, h2, h3 { font-weight: 500; letter-spacing: -0.035em; text-wrap: balance; }
 .nav__end .adm-back { display: inline-flex; }
 .sponsors__name { font-weight: 500; font-size: 18px; letter-spacing: -0.02em; color: var(--ink); text-align: center; }
 .hero__logo { display: block; height: clamp(64px, 6vw, 96px); width: auto; margin: 0 auto 20px; }
+
+/* ---------- hero: the team's own photo, counters and a rotating word ---------- */
+.hero--photo { position: relative; margin-top: 12px; padding: 0; border-radius: 16px; overflow: hidden; min-height: min(calc(100svh - var(--nav) - 24px), 860px); display: grid; align-items: end; text-align: left; color: #fff; background: var(--night, #14171c); isolation: isolate; }
+.hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; z-index: -2; transform-origin: 50% 40%; }
+.hero__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(9, 11, 15, .92) 0%, rgba(9, 11, 15, .72) 38%, rgba(9, 11, 15, .25) 72%, rgba(9, 11, 15, .1) 100%); }
+.hero__in { padding: clamp(24px, 4vw, 56px); max-width: 760px; }
+.hero__kicker { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; background: rgba(255, 255, 255, .12); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-size: 13px; font-weight: 500; }
+.hero__kicker i { width: 8px; height: 8px; border-radius: 50%; background: var(--coral); box-shadow: 0 0 0 4px rgba(255, 107, 74, .25); }
+.hero__brand { display: flex; align-items: center; gap: clamp(12px, 1.6vw, 20px); margin-top: 18px; }
+.hero--photo .hero__logo { height: clamp(52px, 6vw, 84px); width: auto; margin: 0; filter: drop-shadow(0 6px 16px rgba(0, 0, 0, .35)); }
+.hero--photo h1 { font-size: clamp(44px, 7vw, 96px); line-height: .95; letter-spacing: -0.045em; word-spacing: .14em; max-width: none; margin: 0; color: #fff; }
+.hero__rotate { margin-top: 18px; font-size: clamp(20px, 1.6vw + 10px, 30px); font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
+.hero__word { display: inline-block; color: var(--coral); }
+.hero--photo .hero__lead { margin: 14px 0 0; max-width: 48ch; color: rgba(255, 255, 255, .8); }
+.hero--photo .hero__lead strong { color: #fff; }
+.hero--photo .hero__cta { justify-content: flex-start; margin-top: 26px; }
+.hero--photo .btn--ghost { color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .45); }
+.hero--photo .btn--ghost:hover { background: rgba(255, 255, 255, .12); }
+.hero__stats { display: flex; gap: clamp(20px, 4vw, 48px); margin: 30px 0 0; padding-top: 22px; border-top: 1px dashed rgba(255, 255, 255, .28); }
+.hero__stats div { display: grid; gap: 4px; }
+.hero__stats dd { margin: 0; font-size: clamp(26px, 2.4vw + 10px, 44px); font-weight: 500; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.hero__stats dt { font-size: 12px; color: rgba(255, 255, 255, .7); }
+.js:not(.ready) .hero--photo .hero__in > * { opacity: 0; }
+@media (max-width: 639px) {
+  .hero--photo { min-height: calc(100svh - var(--nav) - 16px); border-radius: 14px; margin-top: 8px; }
+  .hero__bg { object-position: 55% 30%; }
+  .hero__shade { background: linear-gradient(to top, rgba(9, 11, 15, .95) 0%, rgba(9, 11, 15, .8) 50%, rgba(9, 11, 15, .2) 85%); }
+  .hero--photo .hero__lead { display: none; }
+  .hero--photo .hero__cta { flex-direction: column; }
+  .hero__stats { justify-content: space-between; gap: 12px; }
+}
+
+/* the hero background is the logo itself, large and glowing on the dark card */
+.hero--photo { background: radial-gradient(120% 90% at 78% 30%, #2a1712 0%, #14171c 55%, #0e1014 100%); }
+.hero--photo .hero__bg { inset: auto; top: 50%; right: -4%; left: auto; width: auto; height: 118%; transform: translateY(-50%); object-fit: contain; opacity: .9; filter: drop-shadow(0 0 60px rgba(255, 107, 74, .35)); }
+.hero--photo .hero__shade { background: linear-gradient(90deg, rgba(14, 16, 20, .92) 0%, rgba(14, 16, 20, .6) 45%, rgba(14, 16, 20, 0) 75%); }
+@media (max-width: 639px) {
+  .hero--photo .hero__bg { top: 6%; right: 50%; height: 58%; transform: translateX(50%); opacity: .55; }
+  .hero--photo .hero__shade { background: linear-gradient(to top, rgba(14, 16, 20, .95) 0%, rgba(14, 16, 20, .7) 45%, rgba(14, 16, 20, 0) 80%); }
+}
